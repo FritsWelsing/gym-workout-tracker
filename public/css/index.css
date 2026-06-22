@@ -1,0 +1,227 @@
+@import url('styles.css');
+
+body {
+  header {
+    width: 100%;
+
+    .container {
+      form {
+        display: flex;
+        justify-content: flex-end;
+
+        button {
+          color: white;
+          font-weight: 550;
+          font-family: inherit;
+          background-color: var(--background-light-color);
+          border: none;
+          padding: 10px 20px;
+          cursor: pointer;
+          border-radius: 10px;
+          border: 1px solid rgba(255, 255, 255, 0.25);
+          transition: 0.2s;
+
+          i {
+            margin-right: 5px;
+          }
+
+          &:hover {
+            background-color: var(--background-light-color-hover);
+          }
+        }
+      }
+    }
+  }
+
+  main {
+    margin-top: 20px;
+
+    .container {
+      .page-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .page-title {
+          font-size: 50px;
+          font-weight: 900;
+          text-transform: capitalize;
+          letter-spacing: -3px;
+        }
+
+        .add-exercise-button {
+          background: linear-gradient(to left, var(--primary-color), var(--primary-color-light));
+          color: var(--button-text-color);
+          text-decoration: none;
+          font-weight: 700;
+          padding: 15px 25px;
+          cursor: pointer;
+          border-radius: 10px;
+          transition: 0.2s;
+
+          i {
+            margin-right: 5px;
+          }
+
+          &:hover {
+            transform: translateY(-3px);
+          }
+        }
+      }
+
+      .day {
+        margin-top: 50px;
+
+        .day-indicator {
+          font-size: 30px;
+          font-weight: 800;
+          border-radius: 10px;
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          margin-bottom: 25px;
+
+          .line {
+            background-color: #262626;
+            height: 2px;
+            flex: 1;
+          }
+        }
+
+        .exercises {
+          display: flex;
+          gap: 20px;
+          overflow-x: scroll;
+
+          .exercise-card {
+            background-color: var(--background-light-color);
+            padding: 15px;
+            border-radius: 10px;
+            min-width: 250px;
+            max-width: 250px;
+            height: 225px;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+
+            .top {
+              display: flex;
+              gap: 5px;
+
+              .exercise-name {
+                font-weight: 600;
+              }
+
+              .edit-exercise-button {
+                margin-left: auto;
+                color: var(--text-light);
+                font-size: 16px;
+                transition: 0.3s;
+
+                &:hover {
+                  color: white;
+                }
+              }
+
+              .delete-exercise-form {
+                .delete-exercise-button {
+                  margin-left: 10px;
+                  color: var(--text-light);
+                  border: none;
+                  background: none;
+                  cursor: pointer;
+                  font-size: 16px;
+                  transition: 0.3s;
+
+                  &:hover {
+                    color: #FF7351;
+                  }
+                }
+              }
+            }
+
+            .weight {
+              background-color: #131313;
+              display: flex;
+              margin-top: auto;
+              padding: 10px;
+              align-items: center;
+              color: var(--text-light);
+              text-transform: uppercase;
+              font-size: 10px;
+              font-weight: 700;
+              border-radius: 5px;
+
+              .weight-amount {
+                margin-left: auto;
+                color: white;
+                font-size: 25px;
+                font-weight: 900;
+              }
+
+              .kg-indicator {
+                align-self: flex-end;
+                margin-bottom: 4px;
+              }
+            }
+
+            .bottom {
+              margin-top: 25px;
+              display: flex;
+              gap: 10px;
+
+              >div {
+                flex: 1;
+              }
+
+              .sets,
+              .reps {
+                .indicator {
+                  color: var(--text-light);
+                  margin-bottom: 5px;
+                  font-size: 10px;
+                  text-transform: uppercase;
+                }
+
+                .amount {
+                  background-color: var(--background-lighter-color);
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  padding: 5px;
+                  border-radius: 5px;
+
+                  form {
+                    button {
+                      border: none;
+                      background: none;
+                      color: white;
+                      padding: 5px 10px;
+                      cursor: pointer;
+                      font-weight: 700;
+                      height: fit-content;
+                    }
+                  }
+
+                  .amount-number {
+                    font-weight: 700;
+                  }
+                }
+              }
+            }
+
+            &:hover {
+              background-color: var(--background-light-color-hover);
+
+              .top {
+                .exercise-name {
+                  color: var(--primary-color-light);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

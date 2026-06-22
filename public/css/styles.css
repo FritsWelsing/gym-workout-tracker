@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --background-color: #0E0E0E;
+  --background-light-color: #1A1A1A;
+  --background-light-color-hover: #20201F;
+  --background-lighter-color: #262626;
+
+  --primary-color: #DFFF00;
+  --primary-color-light: #F6FFC0;
+  --secondary-color: #007BFF;
+
+  --button-text-color: #586500;
+
+  --text-light: #ADAAAA;
+}
+
+body {
+  background-color: var(--background-color);
+  color: white;
+  font-family: Lexend !important;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
