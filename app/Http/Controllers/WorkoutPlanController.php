@@ -84,7 +84,14 @@ class WorkoutPlanController extends Controller implements HasMiddleware
    */
   public function show(WorkoutPlan $workoutPlan)
   {
-    //
+    $workoutPlan->load('trainer', 'planExercises');
+
+    $exercisesByDay = $workoutPlan->planExercises->groupBy('weekday');
+
+    return view('workout-plans.show', [
+      'workoutPlan' => $workoutPlan,
+      'exercisesByDay' => $exercisesByDay,
+    ]);
   }
 
   /**
