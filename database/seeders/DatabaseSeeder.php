@@ -19,10 +19,18 @@ class DatabaseSeeder extends Seeder
             RoleAndPermissionSeeder::class,
         ]);
 
-        // User::factory(10)->create();
-        User::factory()->create([
+        // testgebruiker met rol trainer
+        $trainer = User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+        $trainer->assignRole('trainer');
+
+        // testgebruiker met rol user
+        $user = User::factory()->create([
+            'name' => 'Test Sporter',
+            'email' => 'sporter@example.com',
+        ]);
+        $user->assignRole('user');
     }
 }
