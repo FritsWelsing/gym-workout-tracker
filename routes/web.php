@@ -22,7 +22,7 @@ Route::middleware('auth')->group(function () {
 //* Stuur gebruikers naar juiste pagina
 Route::get('/dashboard', function () {
   return redirect('/exercises');
-})->middleware(['auth']);
+})->middleware(['auth'])->name('dashboard');
 
 Route::resource('exercises', ExerciseController::class)->middleware('auth');
 
