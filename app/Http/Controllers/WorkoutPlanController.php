@@ -30,7 +30,7 @@ class WorkoutPlanController extends Controller implements HasMiddleware
    */
   public function index()
   {
-    $workoutPlans = WorkoutPlan::with('trainer', 'planExercise')
+    $workoutPlans = WorkoutPlan::with('trainer', 'planExercises')
       ->get()
       ->groupBy('trainer_id');
 
