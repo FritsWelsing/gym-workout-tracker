@@ -22,6 +22,7 @@ class WorkoutPlanController extends Controller implements HasMiddleware
       new Middleware(PermissionMiddleware::using('create workout plans'), only: ['create', 'store']),
       new Middleware(PermissionMiddleware::using('edit workout plans'), only: ['edit', 'update']),
       new Middleware(PermissionMiddleware::using('delete workout plans'), only: ['destroy']),
+      new Middleware(PermissionMiddleware::using('import workout plan'), only: ['import']),
     ];
   }
 
@@ -108,5 +109,24 @@ class WorkoutPlanController extends Controller implements HasMiddleware
   public function destroy(WorkoutPlan $workoutPlan)
   {
     //
+  }
+
+  /**
+   * Importeer de oefeningen van een schema naar de eigen oefeningen van de gebruiker.
+   */
+  public function import(WorkoutPlan $workoutPlan)
+  {
+    foreach ($workoutPlan->planExercises as $planExercise) {
+      auth()->user()->exercises()->create([
+        'exercise' => $planExercise->exercise,
+        'weight' => $planExercise->weight,
+        'sets' => $planExercise->sets,
+        'reps' => $planExercise->reps,
+        'weekday' => $planExercise->weekday,
+        'workout_plan_id' => $workoutPlan->id,
+      ]);
+    }
+
+    return redirect()->route('exercises.index');
   }
 }

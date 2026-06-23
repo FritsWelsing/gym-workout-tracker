@@ -40,5 +40,6 @@ Route::put('/exercises/{exercise}/decreasereps', [ExerciseController::class, 'de
 
 //* Workout plans (schema's)
 Route::resource('workout-plans', WorkoutPlanController::class)->middleware('auth');
+Route::post('/workout-plans/{workoutPlan}/import', [WorkoutPlanController::class, 'import'])->name('workout-plans.import')->middleware('auth');
 
 require __DIR__.'/auth.php';
