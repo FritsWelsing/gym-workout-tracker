@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WorkoutPlanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -36,5 +37,8 @@ Route::put('/exercises/{exercise}/decreaseset', [ExerciseController::class, 'dec
 Route::put('/exercises/{exercise}/increasereps', [ExerciseController::class, 'increasereps'])->name('exercises.increasereps');
 // Decrease
 Route::put('/exercises/{exercise}/decreasereps', [ExerciseController::class, 'decreasereps'])->name('exercises.decreasereps');
+
+//* Workout plans (schema's)
+Route::resource('workout-plans', WorkoutPlanController::class)->middleware('auth');
 
 require __DIR__.'/auth.php';
