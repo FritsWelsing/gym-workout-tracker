@@ -1,0 +1,47 @@
+@import url('styles.css');
+
+main {
+  margin-top: 20px;
+}
+
+.error-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 100px;
+
+  .error-code {
+    font-size: 100px;
+    font-weight: 900;
+    color: var(--primary-color);
+    letter-spacing: -5px;
+  }
+
+  .error-message {
+    font-size: 20px;
+    color: var(--text-light);
+    margin-top: 10px;
+  }
+
+  .back-button {
+    margin-top: 30px;
+    background: linear-gradient(to left, var(--primary-color), var(--primary-color-light));
+    color: var(--button-text-color);
+    text-decoration: none;
+    font-weight: 700;
+    padding: 15px 25px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: 0.2s;
+
+    i {
+      margin-right: 5px;
+    }
+
+    &:hover {
+      transform: translateY(-3px);
+    }
+  }
+}

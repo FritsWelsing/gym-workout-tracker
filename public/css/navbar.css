@@ -8,7 +8,7 @@
   .navbar-content {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 40px;
     padding: 15px 0;
   }
 
@@ -23,6 +23,7 @@
   .navbar-links {
     display: flex;
     gap: 25px;
+    flex: 1;
 
     a {
       color: white;
@@ -31,6 +32,10 @@
       transition: 0.2s;
 
       &:hover {
+        color: var(--primary-color);
+      }
+
+      &.active {
         color: var(--primary-color);
       }
     }

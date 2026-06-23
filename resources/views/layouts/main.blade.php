@@ -18,12 +18,15 @@
       <nav class="navbar-links">
         @auth
           @hasrole('user')
-            <a href="{{ route('exercises.index') }}">Mijn oefeningen</a>
-            <a href="{{ route('workout-plans.index') }}">Schema's</a>
+            <a href="{{ route('exercises.index') }}" class="{{ request()->routeIs('exercises.*') ? 'active' : '' }}">Mijn
+              oefeningen</a>
+            <a href="{{ route('workout-plans.index') }}"
+              class="{{ request()->routeIs('workout-plans.*') ? 'active' : '' }}">Schema's</a>
           @endhasrole
 
           @hasrole('trainer')
-            <a href="{{ route('workout-plans.index') }}">Schema's</a>
+            <a href="{{ route('workout-plans.index') }}"
+              class="{{ request()->routeIs('workout-plans.*') ? 'active' : '' }}">Schema's</a>
           @endhasrole
         @endauth
       </nav>

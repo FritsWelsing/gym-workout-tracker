@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\WorkoutPlan;
+use App\Http\Requests\StoreWorkoutPlanRequest;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -29,7 +30,20 @@ class WorkoutPlanController extends Controller implements HasMiddleware
    */
   public function index()
   {
-    //
+    $workoutPlans = WorkoutPlan::with('trainer', 'planExercise')
+      ->get()
+      ->groupBy('trainer_id');
+
+    $ownWorkoutPlans = null;
+
+    if (auth()->user()->hasRole('trainer')) {
+      $ownWorkoutPlans = $workoutPlans->pull(auth()->id());
+    }
+
+    return view('workout-plans.index', [
+      'ownWorkoutPlans' => $ownWorkoutPlans,
+      'workoutPlans' => $workoutPlans,
+    ]);
   }
 
   /**
@@ -37,15 +51,31 @@ class WorkoutPlanController extends Controller implements HasMiddleware
    */
   public function create()
   {
-    //
+    return view('workout-plans.create');
   }
 
   /**
    * Store a newly created resource in storage.
    */
-  public function store(Request $request)
+  public function store(StoreWorkoutPlanRequest $request)
   {
-    //
+    $workoutPlan = WorkoutPlan::create([
+      'name' => $request->name,
+      'description' => $request->description,
+      'trainer_id' => auth()->id(),
+    ]);
+
+    foreach ($request->exercises as $exercise) {
+      $workoutPlan->planExercises()->create([
+        'exercise' => $exercise['exercise'],
+        'weight' => $exercise['weight'],
+        'sets' => $exercise['sets'],
+        'reps' => $exercise['reps'],
+        'weekday' => $exercise['weekday'],
+      ]);
+    }
+
+    return redirect()->route('workout-plans.index');
   }
 
   /**
