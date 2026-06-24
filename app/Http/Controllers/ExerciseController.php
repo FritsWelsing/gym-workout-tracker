@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreExerciseRequest;
+use App\Http\Requests\UpdateExerciseRequest;
 use App\Models\Exercise;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ExerciseController extends Controller
@@ -36,18 +37,15 @@ class ExerciseController extends Controller
   /**
    * Store a newly created resource in storage.
    */
-  public function store(Request $request)
+  public function store(StoreExerciseRequest $request)
   {
-    $exercise = new Exercise();
-    $exercise->exercise = $request->exercise;
-    $exercise->weight = $request->weight;
-    $exercise->sets = $request->sets;
-    $exercise->reps = $request->reps;
-    $exercise->weekday = $request->weekday;
-
-    $exercise->user_id = Auth::id();
-
-    $exercise->save();
+    Auth::user()->exercises()->create([
+      'exercise' => $request->exercise,
+      'weight' => $request->weight,
+      'sets' => $request->sets,
+      'reps' => $request->reps,
+      'weekday' => $request->weekday,
+    ]);
 
     return redirect()->route('exercises.index');
   }
@@ -79,19 +77,19 @@ class ExerciseController extends Controller
   /**
    * Update the specified resource in storage.
    */
-  public function update(Request $request, Exercise $exercise)
+  public function update(UpdateExerciseRequest $request, Exercise $exercise)
   {
     if ($exercise->user_id !== Auth::id()) {
       abort(403);
     }
 
-    $exercise->exercise = $request->exercise;
-    $exercise->weight = $request->weight;
-    $exercise->sets = $request->sets;
-    $exercise->reps = $request->reps;
-    $exercise->weekday = $request->weekday;
-
-    $exercise->save();
+    $exercise->update([
+      'exercise' => $request->exercise,
+      'weight' => $request->weight,
+      'sets' => $request->sets,
+      'reps' => $request->reps,
+      'weekday' => $request->weekday,
+    ]);
 
     return redirect()->route('exercises.index');
   }
@@ -114,6 +112,10 @@ class ExerciseController extends Controller
   // +1 Set
   public function increaseset(Exercise $exercise)
   {
+    if ($exercise->user_id !== Auth::id()) {
+      abort(403);
+    }
+
     $exercise->sets++;
     $exercise->save();
 
@@ -123,6 +125,10 @@ class ExerciseController extends Controller
   // -1 Set
   public function decreaseset(Exercise $exercise)
   {
+    if ($exercise->user_id !== Auth::id()) {
+      abort(403);
+    }
+
     $exercise->sets = max($exercise->sets - 1, 1);
     $exercise->save();
 
@@ -133,6 +139,10 @@ class ExerciseController extends Controller
   // +1 Rep
   public function increasereps(Exercise $exercise)
   {
+    if ($exercise->user_id !== Auth::id()) {
+      abort(403);
+    }
+
     $exercise->reps++;
     $exercise->save();
 
@@ -142,6 +152,10 @@ class ExerciseController extends Controller
   // -1 Rep
   public function decreasereps(Exercise $exercise)
   {
+    if ($exercise->user_id !== Auth::id()) {
+      abort(403);
+    }
+
     $exercise->reps = max($exercise->reps - 1, 1);
     $exercise->save();
 
