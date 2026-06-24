@@ -11,7 +11,7 @@ use Spatie\Permission\Middleware\PermissionMiddleware;
 
 class WorkoutPlanController extends Controller implements HasMiddleware
 {
-  /**
+  /*
    * Permissies koppelen aan de methodes.
    */
   public static function middleware(): array
@@ -26,7 +26,7 @@ class WorkoutPlanController extends Controller implements HasMiddleware
     ];
   }
 
-  /**
+  /*
    * Display a listing of the resource.
    */
   public function index()
@@ -35,11 +35,7 @@ class WorkoutPlanController extends Controller implements HasMiddleware
       ->get()
       ->groupBy('trainer_id');
 
-    $ownWorkoutPlans = null;
-
-    if (auth()->user()->hasRole('trainer')) {
-      $ownWorkoutPlans = $workoutPlans->pull(auth()->id());
-    }
+    $ownWorkoutPlans = $workoutPlans->pull(auth()->id());
 
     return view('workout-plans.index', [
       'ownWorkoutPlans' => $ownWorkoutPlans,
@@ -47,7 +43,7 @@ class WorkoutPlanController extends Controller implements HasMiddleware
     ]);
   }
 
-  /**
+  /*
    * Show the form for creating a new resource.
    */
   public function create()
@@ -55,7 +51,7 @@ class WorkoutPlanController extends Controller implements HasMiddleware
     return view('workout-plans.create');
   }
 
-  /**
+  /*
    * Store a newly created resource in storage.
    */
   public function store(StoreWorkoutPlanRequest $request)
@@ -79,7 +75,7 @@ class WorkoutPlanController extends Controller implements HasMiddleware
     return redirect()->route('workout-plans.index');
   }
 
-  /**
+  /*
    * Display the specified resource.
    */
   public function show(WorkoutPlan $workoutPlan)
@@ -94,7 +90,7 @@ class WorkoutPlanController extends Controller implements HasMiddleware
     ]);
   }
 
-  /**
+  /*
    * Show the form for editing the specified resource.
    */
   public function edit(WorkoutPlan $workoutPlan)
@@ -102,7 +98,7 @@ class WorkoutPlanController extends Controller implements HasMiddleware
     //
   }
 
-  /**
+  /*
    * Update the specified resource in storage.
    */
   public function update(Request $request, WorkoutPlan $workoutPlan)
@@ -110,19 +106,28 @@ class WorkoutPlanController extends Controller implements HasMiddleware
     //
   }
 
-  /**
+  /*
    * Remove the specified resource from storage.
    */
   public function destroy(WorkoutPlan $workoutPlan)
   {
-    //
+    if (auth()->id() !== $workoutPlan->trainer_id) {
+      abort(403, 'Je kunt alleen je eigen schema\'s verwijderen.');
+    }
+
+    $workoutPlan->delete();
+
+    return redirect()->route('workout-plans.index');
   }
 
-  /**
-   * Importeer de oefeningen van een schema naar de eigen oefeningen van de gebruiker.
+  /*
+   * Importeer de oefeningen van een schema naar de eigen oefeningen van de gebruiker,
+   * waarbij de huidige oefeningen van de gebruiker vervangen worden.
    */
   public function import(WorkoutPlan $workoutPlan)
   {
+    auth()->user()->exercises()->delete();
+
     foreach ($workoutPlan->planExercises as $planExercise) {
       auth()->user()->exercises()->create([
         'exercise' => $planExercise->exercise,

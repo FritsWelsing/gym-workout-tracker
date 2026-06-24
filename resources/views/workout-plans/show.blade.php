@@ -55,8 +55,10 @@
 
             <div class="weight">
               Gewicht
-              <div class="weight-amount">{{ $exercise->weight }}</div>
-              <div class="kg-indicator">kg</div>
+              <div class="weight-value">
+                <span class="weight-amount">{{ $exercise->weight }}</span>
+                <span class="kg-indicator">kg</span>
+              </div>
             </div>
 
             <div class="bottom">

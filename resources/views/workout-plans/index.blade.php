@@ -27,7 +27,7 @@
 
       <div class="plans">
         @foreach ($ownWorkoutPlans as $plan)
-          <div class="plan-card">
+          <div class="plan-card" onclick="window.location='{{ route('workout-plans.show', $plan) }}'">
             <div class="top">
               <p class="plan-name">{{ $plan->name }}</p>
 
@@ -70,7 +70,7 @@
 
       <div class="plans">
         @foreach ($plans as $plan)
-          <div class="plan-card">
+          <div class="plan-card" onclick="window.location='{{ route('workout-plans.show', $plan) }}'">
             <div class="top">
               <p class="plan-name">{{ $plan->name }}</p>
 
@@ -97,3 +97,9 @@
     </div>
   @endforeach
 @endsection
+
+<script>
+  document.querySelectorAll('.plan-card a, .plan-card button').forEach(el => {
+    el.addEventListener('click', e => e.stopPropagation());
+  });
+</script>
