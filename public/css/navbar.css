@@ -4,6 +4,8 @@
   width: 100%;
   background-color: var(--background-light-color);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
 
   .navbar-content {
     display: flex;

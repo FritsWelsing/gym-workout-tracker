@@ -6,7 +6,7 @@ use App\Http\Controllers\WorkoutPlanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+  return view('welcome');
 });
 
 // Route::get('/dashboard', function () {
@@ -14,32 +14,31 @@ Route::get('/', function () {
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+  Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+  Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+  Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 //* Stuur gebruikers naar juiste pagina
 Route::get('/dashboard', function () {
-  return redirect('/exercises');
+  if (auth()->user()->hasRole('trainer')) {
+    return redirect()->route('workout-plans.index');
+  }
+
+  return redirect()->route('exercises.index');
 })->middleware(['auth'])->name('dashboard');
 
-Route::resource('exercises', ExerciseController::class)->middleware('auth');
+Route::resource('exercises', ExerciseController::class)->middleware(['auth', 'permission:manage own exercises']);
 
-//* Sets
-// Increase
-Route::put('/exercises/{exercise}/increaseset', [ExerciseController::class, 'increaseset'])->name('exercises.increaseset');
-// Decrease
-Route::put('/exercises/{exercise}/decreaseset', [ExerciseController::class, 'decreaseset'])->name('exercises.decreaseset');
-
-//* Reps
-// Increase
-Route::put('/exercises/{exercise}/increasereps', [ExerciseController::class, 'increasereps'])->name('exercises.increasereps');
-// Decrease
-Route::put('/exercises/{exercise}/decreasereps', [ExerciseController::class, 'decreasereps'])->name('exercises.decreasereps');
+Route::middleware(['auth', 'permission:manage own exercises'])->group(function () {
+  Route::put('/exercises/{exercise}/increaseset', [ExerciseController::class, 'increaseset'])->name('exercises.increaseset');
+  Route::put('/exercises/{exercise}/decreaseset', [ExerciseController::class, 'decreaseset'])->name('exercises.decreaseset');
+  Route::put('/exercises/{exercise}/increasereps', [ExerciseController::class, 'increasereps'])->name('exercises.increasereps');
+  Route::put('/exercises/{exercise}/decreasereps', [ExerciseController::class, 'decreasereps'])->name('exercises.decreasereps');
+});
 
 //* Workout plans (schema's)
 Route::resource('workout-plans', WorkoutPlanController::class)->middleware('auth');
 Route::post('/workout-plans/{workoutPlan}/import', [WorkoutPlanController::class, 'import'])->name('workout-plans.import')->middleware('auth');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

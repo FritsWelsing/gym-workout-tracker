@@ -17,13 +17,15 @@ class RoleAndPermissionSeeder extends Seeder
   {
     app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-    // permissies voor workout plan CRUD
+    // permissions voor workout plan CRUD
     Permission::create(['name' => 'index workout plans']);
     Permission::create(['name' => 'show workout plans']);
     Permission::create(['name' => 'create workout plans']);
     Permission::create(['name' => 'edit workout plans']);
     Permission::create(['name' => 'delete workout plans']);
     Permission::create(['name' => 'import workout plan']);
+    // permissions voor eigen exercises (alleen voor users)
+    Permission::create(['name' => 'manage own exercises']);
 
     // cache opnieuw legen zodat de net aangemaakte permissies gevonden worden
     app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
@@ -47,6 +49,7 @@ class RoleAndPermissionSeeder extends Seeder
         'edit workout plans',
         'delete workout plans',
         'import workout plan',
+        'manage own exercises',
       ]);
   }
 }
