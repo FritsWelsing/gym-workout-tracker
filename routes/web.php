@@ -21,7 +21,7 @@ Route::middleware('auth')->group(function () {
 
 //* Stuur gebruikers naar juiste pagina
 Route::get('/dashboard', function () {
-  if (auth()->user()->hasRole('trainer')) {
+  if (Auth::user()->hasRole('trainer')) {
     return redirect()->route('workout-plans.index');
   }
 

@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\WorkoutPlan;
 use App\Http\Requests\StoreWorkoutPlanRequest;
 use App\Http\Requests\UpdateWorkoutPlanRequest;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 
 class WorkoutPlanController extends Controller implements HasMiddleware
@@ -36,7 +36,7 @@ class WorkoutPlanController extends Controller implements HasMiddleware
       ->get()
       ->groupBy('trainer_id');
 
-    $ownWorkoutPlans = $workoutPlans->pull(auth()->id());
+    $ownWorkoutPlans = $workoutPlans->pull(Auth::id());
 
     return view('workout-plans.index', [
       'ownWorkoutPlans' => $ownWorkoutPlans,
@@ -60,7 +60,7 @@ class WorkoutPlanController extends Controller implements HasMiddleware
     $workoutPlan = WorkoutPlan::create([
       'name' => $request->name,
       'description' => $request->description,
-      'trainer_id' => auth()->id(),
+      'trainer_id' => Auth::id(),
     ]);
 
     foreach ($request->exercises as $exercise) {
@@ -96,7 +96,7 @@ class WorkoutPlanController extends Controller implements HasMiddleware
    */
   public function edit(WorkoutPlan $workoutPlan)
   {
-    if (auth()->id() !== $workoutPlan->trainer_id) {
+    if (Auth::id() !== $workoutPlan->trainer_id) {
       abort(403, 'Je kunt alleen je eigen schema\'s wijzigen.');
     }
 
@@ -126,7 +126,7 @@ class WorkoutPlanController extends Controller implements HasMiddleware
    */
   public function update(UpdateWorkoutPlanRequest $request, WorkoutPlan $workoutPlan)
   {
-    if (auth()->id() !== $workoutPlan->trainer_id) {
+    if (Auth::id() !== $workoutPlan->trainer_id) {
       abort(403, 'Je kunt alleen je eigen schema\'s wijzigen.');
     }
 
@@ -155,7 +155,7 @@ class WorkoutPlanController extends Controller implements HasMiddleware
    */
   public function destroy(WorkoutPlan $workoutPlan)
   {
-    if (auth()->id() !== $workoutPlan->trainer_id) {
+    if (Auth::id() !== $workoutPlan->trainer_id) {
       abort(403, 'Je kunt alleen je eigen schema\'s verwijderen.');
     }
 
@@ -170,10 +170,10 @@ class WorkoutPlanController extends Controller implements HasMiddleware
    */
   public function import(WorkoutPlan $workoutPlan)
   {
-    auth()->user()->exercises()->delete();
+    Auth::user()->exercises()->delete();
 
     foreach ($workoutPlan->planExercises as $planExercise) {
-      auth()->user()->exercises()->create([
+      Auth::user()->exercises()->create([
         'exercise' => $planExercise->exercise,
         'weight' => $planExercise->weight,
         'sets' => $planExercise->sets,
