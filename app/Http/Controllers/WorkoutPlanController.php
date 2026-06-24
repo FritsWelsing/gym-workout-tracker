@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\WorkoutPlan;
 use App\Http\Requests\StoreWorkoutPlanRequest;
+use App\Http\Requests\UpdateWorkoutPlanRequest;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -95,15 +96,58 @@ class WorkoutPlanController extends Controller implements HasMiddleware
    */
   public function edit(WorkoutPlan $workoutPlan)
   {
-    //
+    if (auth()->id() !== $workoutPlan->trainer_id) {
+      abort(403, 'Je kunt alleen je eigen schema\'s wijzigen.');
+    }
+
+    $workoutPlan->load('planExercises');
+
+    $exercisesByDay = $workoutPlan->planExercises
+      ->groupBy('weekday')
+      ->map(function ($exercises) {
+        return $exercises->map(function ($exercise) {
+          return [
+            'exercise' => $exercise->exercise,
+            'weight' => $exercise->weight,
+            'sets' => $exercise->sets,
+            'reps' => $exercise->reps,
+          ];
+        });
+      });
+
+    return view('workout-plans.edit', [
+      'workoutPlan' => $workoutPlan,
+      'exercisesByDay' => $exercisesByDay,
+    ]);
   }
 
   /*
    * Update the specified resource in storage.
    */
-  public function update(Request $request, WorkoutPlan $workoutPlan)
+  public function update(UpdateWorkoutPlanRequest $request, WorkoutPlan $workoutPlan)
   {
-    //
+    if (auth()->id() !== $workoutPlan->trainer_id) {
+      abort(403, 'Je kunt alleen je eigen schema\'s wijzigen.');
+    }
+
+    $workoutPlan->update([
+      'name' => $request->name,
+      'description' => $request->description,
+    ]);
+
+    $workoutPlan->planExercises()->delete();
+
+    foreach ($request->exercises as $exercise) {
+      $workoutPlan->planExercises()->create([
+        'exercise' => $exercise['exercise'],
+        'weight' => $exercise['weight'],
+        'sets' => $exercise['sets'],
+        'reps' => $exercise['reps'],
+        'weekday' => $exercise['weekday'],
+      ]);
+    }
+
+    return redirect()->route('workout-plans.show', $workoutPlan);
   }
 
   /*

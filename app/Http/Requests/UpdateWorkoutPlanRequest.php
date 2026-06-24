@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class UpdateWorkoutPlanRequest extends FormRequest
+{
+  /**
+   * Determine if the user is authorized to make this request.
+   */
+  public function authorize(): bool
+  {
+    return true;
+  }
+
+  /**
+   * Get the validation rules that apply to the request.
+   *
+   * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+   */
+  public function rules(): array
+  {
+    return [
+      'name' => ['required', 'string', 'max:255'],
+      'description' => ['nullable', 'string'],
+      'exercises' => ['required', 'array', 'min:1'],
+      'exercises.*.exercise' => ['required', 'string', 'max:255'],
+      'exercises.*.weight' => ['required', 'numeric', 'min:0'],
+      'exercises.*.sets' => ['required', 'integer', 'min:1'],
+      'exercises.*.reps' => ['required', 'integer', 'min:1'],
+      'exercises.*.weekday' => ['required', 'string', 'in:Maandag,Dinsdag,Woensdag,Donderdag,Vrijdag,Zaterdag,Zondag'],
+    ];
+  }
+}
